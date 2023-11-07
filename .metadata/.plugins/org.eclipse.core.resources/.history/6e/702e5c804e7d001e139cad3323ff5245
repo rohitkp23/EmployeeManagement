@@ -1,0 +1,19 @@
+package in.co.vwits.ems.service;
+
+import java.util.List;
+
+import in.co.vwits.ems.model.Employee;
+import in.co.vwits.model.exception.EmployeeNotFoundException;
+
+public class EmployeeService {
+
+	List<Employee> findAll();
+
+	void save(Employee e);
+
+	Optional<Employee> findByEmpId(int empId) throws EmployeeNotFoundException;
+
+	void deleteByEmpId(int empId);
+
+	void updateByEmpId(int empId, double newSalary);
+}

@@ -1,0 +1,95 @@
+import java.util.List;
+import java.util.Scanner;
+
+public class TestEmployee {
+
+	public static void main(String[] args) {
+
+		int option = 1;
+
+		Scanner sc = null;	
+		try {
+			sc = new Scanner(System.in);
+			EmployeeService service = new EmployeeServiceImpl();
+
+			do {
+				System.out.println("*********************Welcome to Employee Management Portal*********************");
+				System.out.println("1. Find all records");
+				System.out.println("2. Insert records");
+				System.out.println("3. Find Employee by Employee Id");
+				System.out.println("4. Delete a Employee by Emp Id");
+				System.out.println("5. Update salary by EmpId");
+				System.out.println("-1 to exit");
+				System.out.println("Enter your choice");
+
+				option = sc.nextInt();
+				switch(option)
+				{
+				case 1:
+					List<Student> students = service.findAll();
+					System.out.println(students);
+					break;
+
+				case 2:
+					Student s = new Student();
+					System.out.print("Enter Roll No: ");
+					s.setRollno(sc.nextInt());
+					sc.nextLine(); 
+					System.out.print("Enter Name: ");
+					s.setName(sc.nextLine());
+					System.out.print("Enter Percentage: ");
+					s.setPercentage(sc.nextDouble());
+					System.out.print("Enter Date of Birth: ");
+					String dobInput = sc.nextLine();
+					LocalDate dateOfBirth = LocalDate.parse(dobInput);
+					s.setDateOfBirth(dateOfBirth);
+					sc.nextLine(); 
+					service.save(s);
+					StudentJDBCDaoImpl studentDao = new StudentJDBCDaoImpl();
+					studentDao.save(s);
+					System.out.println("Student saved successfully");
+					break;
+
+				case 3:
+					System.out.print("Enter Roll No to find: ");
+					int rollno = sc.nextInt();
+					Optional<Student> foundStudent;
+					try {
+						foundStudent = service.findByRollNo(rollno);
+						System.out.println("Found Student " + foundStudent.get());
+					} catch (StudentNotFoundException e) {
+						//e.printStackTrace();
+						System.out.println("Student Not Found");
+					}
+					break;
+
+				case 4:
+					System.out.print("Enter Roll No to delete: ");
+					try {
+						rollno = sc.nextInt();
+						service.deleteByRollNo(rollno);
+					}
+
+					catch(InputMismatchException e){
+						System.out.println("Roll no must be an integer value");
+						sc.nextLine();// This statement is used to discard the input
+					}
+					break;
+
+				case 5:
+					System.out.print("Enter Roll No to update percentage: ");
+					rollno = sc.nextInt();
+					System.out.print("Enter the new percentage: ");
+					double newPercentage = sc.nextDouble();
+					service.updateByRollNo(rollno, newPercentage);
+					break;
+
+				}
+
+			}while(option!= -1);
+		}
+		finally {
+			sc.close();
+		}
+	}
+}

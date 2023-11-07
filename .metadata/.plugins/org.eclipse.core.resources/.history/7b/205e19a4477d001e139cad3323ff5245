@@ -1,0 +1,85 @@
+package in.co.vwits.ems.dao.impl;
+
+import java.util.ArrayList;
+
+public class EmployeeDaoImpl {
+	
+	private List<Student> employees;
+
+	public EmployeeDaoImpl() {
+		employees = new ArrayList<Employee>();
+		Employee e1 = new Employee(); 
+		e1.setEmpId(1);
+		e1.setName("Amit");
+		e1.setSalary(95);
+		
+
+		Student e2 = new Student(); 
+		e2.setRollno(2);
+		e2.setName("Sumit");
+		e2.setSalary(75);
+		
+
+		Student e3 = new Student(); 
+		e3.setRollno(3);
+		e3.setName("Rahul");
+		e3.setSalary(85);
+
+
+		employees.add(e1);
+		employees.add(e2);
+		employees.add(e3);
+	}
+
+	//Read all
+	public List<Student> findAll(){
+		return students;
+	}
+
+	//Create 
+	public void save(Student s)
+	{
+		students.add(s);
+	}
+
+	//Search by rollno
+	public Optional <Student> findByRollNo(int rollNo) 
+	{
+		for (Student s : students) 
+		{
+			if (s.getRollno() == rollNo) 
+			{
+				return Optional.of(s);
+			}
+		}
+		return Optional.empty(); 
+	}
+
+	//Delete by rollno
+	public void deleteByRollNo(int rollNo) 
+	{
+		Iterator<Student> i = students.iterator();
+		while(i.hasNext())
+		{
+			Student s = i.next();
+			if(s.getRollno() == rollNo)
+			{
+				i.remove();
+			}
+		}
+	}
+	//Update percentage by rollno
+	public void updateByRollNo(int rollno, double newPercentage) 
+	{
+		for (Student s : students)
+		{
+			if (s.getRollno() == rollno) 
+			{
+				s.setPercentage(newPercentage);
+				return;
+			}
+		}
+
+	}
+
+}

@@ -1,0 +1,52 @@
+package in.co.vwits.ems.service.impl;
+
+import java.util.List;
+
+import in.co.vwits.ems.dao.EmployeeDao;
+import in.co.vwits.ems.model.Employee;
+import in.co.vwits.model.exception.EmployeeNotFoundException;
+
+public class EmployeeServiceImpl implements EmployeeService {
+	private EmployeeDao dao;
+
+	public EmployeeServiceImpl() {
+		dao = new EmployeeJDBCDaoImpl();
+
+	}
+	
+	@Override
+	public List<Employee> findAll(){
+		return dao.findAll();
+	}
+
+	@Override
+	public void save(Employee e)
+	{
+		dao.findAll().add(e);
+	}
+
+	@Override
+	public Optional<Employee> findByRollNo(int rollNo) throws EmployeeNotFoundException 
+	{
+		Optional <Employee> p = dao.findByRollNo(rollNo);
+		if(p.isPresent()) {
+		return p; 
+		}
+		else {
+			//throw user defined exception "EmployeeNotFound"
+			throw new EmployeeNotFoundException();
+		}
+	}
+
+	@Override
+	public void deleteByRollNo(int rollNo) 
+	{
+		dao.deleteByRollNo(rollNo);
+	}
+
+	@Override
+	public void updateByRollNo(int rollno, double newPercentage) 
+	{
+		dao.updateByRollNo(rollno, newPercentage);
+	}
+}

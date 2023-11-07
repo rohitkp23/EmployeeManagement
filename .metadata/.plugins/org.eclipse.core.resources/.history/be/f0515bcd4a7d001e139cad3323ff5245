@@ -1,0 +1,11 @@
+package in.co.vwits.ems.dao;
+
+public class EmployeeDao {
+	
+	public int save(Employee e);
+	public void deleteByEmpId(int empId);
+	public Optional<Student> findByEmpId(int empId);
+	public List<Student> findAll();
+	public void updateByEmpID(int rollNo, double newSalary);
+
+}

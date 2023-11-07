@@ -1,0 +1,14 @@
+package in.co.vwits.ems.dao;
+
+import java.util.List;
+import java.util.Optional;
+
+public class EmployeeDao {
+	
+	public int save(Employee e);
+	public void deleteByEmpId(int empId);
+	public Optional<Employee> findByEmpId(int empId);
+	public List<Employee> findAll();
+	public void updateByEmpID(int empId, double newSalary);
+
+}

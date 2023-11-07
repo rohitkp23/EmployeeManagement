@@ -1,0 +1,12 @@
+package in.co.vwits.ems.service.impl;
+
+import in.co.vwits.ems.dao.EmployeeDao;
+
+public class EmployeeServiceImpl implements EmployeeService {
+	private EmployeeDao dao;
+
+	public EmployeeServiceIm() {
+		dao = new EmployeeJDBCDaoImpl();
+
+	}
+}

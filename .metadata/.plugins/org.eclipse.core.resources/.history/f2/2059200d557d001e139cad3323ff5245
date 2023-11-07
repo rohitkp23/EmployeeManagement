@@ -1,0 +1,97 @@
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
+
+import in.co.vwits.ems.dao.impl.EmployeeJDBCDaoImpl;
+import in.co.vwits.ems.model.Employee;
+import in.co.vwits.model.exception.EmployeeNotFoundException;
+
+public class TestEmployee {
+
+	public static void main(String[] args) {
+
+		int option = 1;
+
+		Scanner sc = null;	
+		try {
+			sc = new Scanner(System.in);
+			EmployeeService service = new EmployeeServiceImpl();
+
+			do {
+				System.out.println("*********************Welcome to Employee Management Portal*********************");
+				System.out.println("1. Find all records");
+				System.out.println("2. Insert records");
+				System.out.println("3. Find Employee by Employee Id");
+				System.out.println("4. Delete a Employee by Emp Id");
+				System.out.println("5. Update salary by EmpId");
+				System.out.println("-1 to exit");
+				System.out.println("Enter your choice");
+
+				option = sc.nextInt();
+				switch(option)
+				{
+				case 1:
+					List<Employee> employees = service.findAll();
+					System.out.println(employees);
+					break;
+
+				case 2:
+					Employee e = new Employee();
+					System.out.print("Enter Employee Id ");
+					e.setEmpId(sc.nextInt());
+					sc.nextLine(); 
+					System.out.print("Enter Name: ");
+					e.setName(sc.nextLine());
+					System.out.print("Enter Salary: ");
+					e.setSalary(sc.nextDouble());
+					service.save(e);
+					
+					EmployeeJDBCDaoImpl employeeDao = new EmployeeJDBCDaoImpl();
+					employeeDao.save(e);
+					System.out.println("Employee saved successfully");
+					break;
+
+				case 3:
+					System.out.print("Enter Employee Id to find: ");
+					int empId = sc.nextInt();
+					Optional<Employee> foundEmployee;
+					try {
+						foundEmployee = service.findByEmpId(empId);
+						System.out.println("Found Employee " + foundEmployee.get());
+					} catch (EmployeeNotFoundException x) {
+						//e.printStackTrace();
+						System.out.println("Employee Not Found");
+					}
+					break;
+
+				case 4:
+					System.out.print("Enter Emp Id to delete: ");
+					try {
+						empId = sc.nextInt();
+						service.deleteByEmpId(empId);
+					}
+
+					catch(InputMismatchException ex){
+						System.out.println("Emp Id must be an integer value");
+						sc.nextLine();
+					}
+					break;
+
+				case 5:
+					System.out.print("Enter Employee Id to update salary: ");
+					empId = sc.nextInt();
+					System.out.print("Enter the new slary: ");
+					double newSalary = sc.nextDouble();
+					service.updateByEmpId(empId, newSalary);
+					break;
+
+				}
+
+			}while(option!= -1);
+		}
+		finally {
+			sc.close();
+		}
+	}
+}

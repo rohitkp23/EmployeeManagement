@@ -1,0 +1,117 @@
+package in.co.vwits.ems.dao.impl;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import in.co.vwits.ems.model.Employee;
+
+public class EmployeeJDBCDaoImpl implements EmployeeDao {
+	public int save(Employee e) {
+		try {
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee_db","root","rkp23");
+			PreparedStatement pstmt = con.prepareStatement("INSERT INTO tbl_employee VALUES(?,?,?)");
+
+
+			pstmt.setInt(1, e.getEmpId());
+			pstmt.setString(2, e.getName());
+			pstmt.setDouble(3, e.getSalary());
+
+
+			int noOfRowsUpdated = pstmt.executeUpdate();//firing query
+			return noOfRowsUpdated;
+
+		} catch (SQLException s) {
+			s.printStackTrace();
+		} 
+		return 0;
+	}
+
+	public void deleteByEmpId(int empId) {
+		try {
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee_db", "root", "rkp23");
+			PreparedStatement pstmt = con.prepareStatement("DELETE FROM tbl_student WHERE empId = ?");
+
+			pstmt.setInt(1, empId);
+
+			int noOfRowsDeleted = pstmt.executeUpdate();
+			System.out.println("Number of records deleted are " + noOfRowsDeleted);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Optional<Employee> findByEmpId(int empId) {
+		try {
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee_db", "root", "rkp23");
+			PreparedStatement pstmt = con.prepareStatement("SELECT * FROM tbl_student WHERE empId = ?");
+
+			pstmt.setInt(1, empId);
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				Employee foundStudent = new Employee();
+				foundStudent.setEmpId(rs.getInt("empId"));
+				foundStudent.setName(rs.getString("name"));
+				foundStudent.setSalary(rs.getDouble("salary"));
+			
+				return Optional.of(foundStudent);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return Optional.empty();
+	}
+
+	public List<Employee> findAll() {
+
+		List<Employee> employees = new ArrayList<>();
+
+		try (	Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_db", "root", "rkp23");
+				PreparedStatement pstmt = con.prepareStatement("SELECT * FROM tbl_student");
+				ResultSet rs = pstmt.executeQuery()) {
+
+			while (rs.next()) {
+				Student student = new Student();
+				student.setRollno(rs.getInt("rollno"));
+				student.setName(rs.getString("name"));
+				student.setPercentage(rs.getDouble("percentage"));
+				student.setNumberOfAttempts(rs.getInt("attempts"));
+				java.sql.Date sqlDate = rs.getDate(5);
+				LocalDate localDate = sqlDate.toLocalDate();
+				student.setDateOfBirth(localDate);
+				students.add(student);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return students;
+	}
+
+	public void updateByRollNo(int rollNo, double newPercentage) {
+		try {
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_db", "root", "rkp23");
+			PreparedStatement pstmt = con.prepareStatement("UPDATE tbl_student SET percentage = ? WHERE rollno = ?");
+
+			pstmt.setDouble(1, newPercentage);
+			pstmt.setInt(2, rollNo);
+
+			int noOfRowsUpdated = pstmt.executeUpdate();
+			System.out.println("Number of records updated are " + noOfRowsUpdated);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+
+}
